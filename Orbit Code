@@ -1,0 +1,236 @@
+''' import statements '''
+import numpy as np 
+from scipy.optimize import root
+import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+import tqdm 
+
+''' constants'''
+
+m1 = 23                 # Mass of primary star    
+m2 = 1.8                # Mass of Compact object
+M = m1 + m2             # Total mass of the system
+r = 2.2865 * 10**12     # radius for close
+g = 1.33 * 10**26       # not sure what this constant is for double check 
+# 6.6743 * 10**(-11)    # Gravitational constant in m^3 kg^-1 s^-2
+vr = 1                  # radial velocity
+period = 8.964 * 86400  # period of the system 
+a = 0                   # acceleration
+
+
+''' computing quantities for binary system with stellar wind'''
+
+
+m1 = 1.8
+m2 = 23.0
+bsep  = 1
+
+omega = np.sqrt((m1+m2)/bsep**3)
+qratio = (m2)/(m1)
+opq = 1 + qratio
+xns = bsep / opq            # distance from CoM to neutron star 
+xps = bsep - xns            # distance from CoM to primary star
+
+#print("initial distance is", )
+
+''' setting up arrays'''
+
+''' this is the initial distance to the point mass from the neutron star'''
+d = .01
+v_multiplier = 0.48
+
+pos_0 = np.array([d,0])                                        # position
+mom_0 = np.array([0,np.sqrt(m1 / d)]) * v_multiplier           # velocity
+
+final_time = 0.01
+nts = 30000
+dt = final_time / nts
+
+def gravity_N(x,y,z):                                                       # gravity from the neutron star
+    
+    '''gravity components'''
+
+    N = - m1 * x / np.sqrt(np.dot(x,x))**3                                             # neutron star gravity
+    
+    P = - m2 * (y) / np.sqrt(np.dot(y,y))**3                                           # primary star gravity 
+    G = N + P
+
+    ''' spinning components'''
+    S = (omega ** 2) * z
+
+    
+    T = G + S
+
+
+    return T 
+
+
+
+
+def Gravity_euler(x,p,dt,nts,force_N):                                 # integration over the neutron and the primary 
+    xs = np.zeros((nts + 1,) + x.shape)
+    ps = np.zeros((nts + 1,) + p.shape)
+
+    xs1 = np.zeros((nts + 1,) + x.shape)
+    xs2 = np.zeros((nts + 1,) + x.shape)
+
+    c = np.zeros((nts + 1,) + p.shape)
+
+    v = np.zeros((nts + 1,) + x.shape)
+
+    xs[0] = x
+    xs1[0] = x + bsep
+    xs2[0] = x + xns   
+                                                   
+    ps[0] = p
+
+
+    
+
+
+    for t in range(nts):
+        c[:,0] = (-2 * omega) * ps[:,1]
+        c[:,1] = (-2 * omega) * ps[:,0]
+
+        ps[t + 1] = ps[t] + dt * ((force_N(xs[t],xs1[t],xs2[t])) + c[t])
+        xs[t + 1] = xs[t] + dt * ps[t + 1]
+        
+        xs1[t + 1] = xs1[t] + dt * ps[t + 1]
+
+        xs2[t + 1] = xs2[t] + dt * ps[t + 1]
+
+        
+
+        
+
+
+
+
+
+    return xs, ps
+
+
+
+
+# Position and momentum for both the Primary and Neutron Stars 
+x_ex , p_ex  = Gravity_euler(pos_0, mom_0, dt, nts, gravity_N)
+
+
+
+########################################################################################
+
+
+# printing the highest and lowest values of position
+
+def Max(sets):
+    return (max(sets))
+
+def Min(sets):
+    return (min(sets))
+
+semi_major = ((max(x_ex[:,0])) - (min(x_ex[:,0]))) / 2
+
+semi_minor = ((max(x_ex[:,1])) - (min(x_ex[:,1]))) / 2
+
+eccentricity = np.sqrt( 1 - ((semi_minor ** 2) / (semi_major ** 2)))
+
+
+print('Max x value of position,', (max(x_ex[:,0])))
+
+print('Max y value of position,', (max(x_ex[:,1])))
+
+print('Min x value of position', (min(x_ex[:,0])))
+
+print('Min y value of position', (min(x_ex[:,1])))
+
+
+# printing the highest and lowest values of velocity
+
+print('Max x value of velocity,', (max(p_ex[:,0])))
+
+print('Max y value of velocity,', (max(p_ex[:,1])))
+
+print('Min x value of velocity,', (min(p_ex[:,0])))
+
+print('Min y value of velocity,', (min(p_ex[:,1])))
+
+print('The semi major axis of the elipse = ', (semi_major))
+print('The semi minor axis of the elipse = ', semi_minor)
+print('The eccentricity of the elipse = ', eccentricity)
+
+''' Keplerian Velocity'''
+kv_major = np.sqrt((g * M) / (semi_major))
+kv_minor = np.sqrt((g * M) / (semi_minor))
+
+print('Keplerian Velocity at minor is = ',kv_minor)
+print('Keplerian Velocity at major is = ',kv_major)
+########################################################################################
+
+
+def plot_trajectory(q, start_width=1.0, end_width=3.0, **kwargs): 
+    points = q.reshape(-1, 1, 2)
+    segments = np.concatenate([points[:-1], points[1:]], axis=1) 
+    widths = np.linspace(start_width, end_width, len(points)) 
+    return LineCollection(segments, linewidths=widths, **kwargs)
+
+''' trying to make the velocity a magnitude rather than a vector of x and y'''
+
+#'''
+ #statement to print the position points
+
+np.savetxt('third_o_elipse_pos.txt', x_ex)
+
+#'''
+
+
+
+
+#plt.style.use('dark_background')
+'''
+plt.close()
+
+fig, ax = plt.subplots(2)
+ax[0].set_aspect("equal")
+ax[0].set_xlim((- 0.25, + 0.25))
+ax[0].set_ylim((- 0.25, + 0.25))
+ax[0].get_xaxis().set_visible(True)
+ax[0].get_yaxis().set_visible(True)
+ax[0].add_collection(plot_trajectory(x_ex, color="darkorchid", label="Primary and Neutron Star with spinning")) 
+ax[0].set_xlabel('x position')
+ax[0].set_ylabel('y position')
+
+
+#ax.legend(loc="upper right");
+
+ax[1].set_aspect("equal")
+ax[1].set_xlim((0, + 50))
+ax[1].set_ylim((-1, +1))
+ax[1].get_xaxis().set_visible(True)
+ax[1].get_yaxis().set_visible(True)
+ax[1].plot(velocity, position, 'fuchsia', label='position and momentum')
+ax[1].set_xlabel('velocity')
+ax[1].set_ylabel('position')
+plt.grid()
+'''
+
+
+#'''
+plt.close()
+fig, ax = plt.subplots()
+ax.set_aspect("equal")
+ax.set_xlim((- .025, + .025))
+ax.set_ylim((- .025, + .025))
+ax.get_xaxis().set_visible(True)
+ax.get_yaxis().set_visible(True)
+ax.add_collection(plot_trajectory(x_ex, color="darkorchid", label="Eccentricity is {} " .format(eccentricity)))
+ax.legend(loc="upper right");
+plt.grid()
+#'''
+
+
+plt.show()
+
+
+
+
+    
