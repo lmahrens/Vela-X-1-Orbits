@@ -1,0 +1,147 @@
+import numpy as np
+
+
+''' imput statement for semi major axis '''
+############################################### orbit 1 ##############################################
+
+x_1 = ([9.97469e-1 , 1.82614e-3]) # left point of x axis
+x1 = 9.97469e-1
+
+x_2 = ([1.00906, -4.23789e-3])    # right point of x axis
+x2 = 1.00906
+
+y_1 = ([1.00012, -6.23612e-3])    # bottom point of y axis
+y1 =-6.23612e-3   
+
+y_2 = ([1.00595, 3.25879e-3])     # top point of y axis
+y2 = 3.25879e-3
+
+x_axis = (x2 - x1) / 2
+#print(x_axis)
+
+y_axis = (y2 - y1) / 2
+#print(y_axis)
+
+eccentricity = np.sqrt(1 - ((y_axis ** 2) / (x_axis ** 2)))
+print('The eccentricity of the inner orbit is,', eccentricity)
+
+############################################### orbit 2 ##############################################
+
+x_3 = [9.95632e-1, 1.80501e-3]
+x3 = 9.95632e-1
+
+x_4 = [1.01179, -5.31432e-3]
+x4 = 1.01179
+
+
+y_3 = [9.98772e-1, -8.60096e-3]
+y3 = 9.98772e-1
+y_4 = [1.00688,4.73936e-3]
+y4 = 1.00688
+
+
+x_axis1 = (x4 - x3) / 2
+#print(x_axis1)
+
+y_axis1 = (y4 - y3) / 2
+#print(y_axis1)
+
+eccentricity1 = np.sqrt(1 - ((y_axis1 ** 2) / (x_axis1 ** 2)))
+print('The eccentricity of the second inner orbit is,', eccentricity1)
+
+############################################### orbit 3 ##############################################
+
+x_5 = [9.94044e-1, 2.55528e-03]
+x5 = 9.94044e-1
+
+x_6 = [1.01396,-6.16976e-3]
+x6 = 1.01396
+
+
+y_5 = [9.97553e-1, -1.06334e-2]
+y5 = 9.97553e-1
+
+y_6 = [1.0075, 5.7488e-3]
+y6 = 1.0075
+
+
+x_axis2 = (x6 - x5) / 2
+#print(x_axis2)
+
+y_axis2 = (y6 - y5) / 2
+#print(y_axis2)
+
+eccentricity2 = np.sqrt(1 - ((y_axis2 ** 2) / (x_axis2 ** 2)))
+print('The eccentricity of the third inner orbit is,', eccentricity2)
+
+
+############################################## orbit 4  ##############################################
+
+x_7 = [9.92358e-01,3.49842e-3]
+x7 = 9.92358e-01
+
+x_8 = [1.01744, -7.56115e-3]
+x8 = 1.01744
+
+
+y_7 = [9.95838e-1, -1.34339e-2]
+y7 = 9.95838e-1
+
+y_8 = [1.00897, 8.24862e-3]
+y8 = 1.00897
+
+x_axis3 = (x8 - x7) / 2
+#print(x_axis3)
+
+y_axis3 = (y8 - y7) / 2
+#print(y_axis3)
+
+eccentricity3 = np.sqrt(1 - ((y_axis3 ** 2) / (x_axis3 ** 2)))
+print('The eccentricity of the fourth inner orbit is,', eccentricity3)
+
+############################################### orbit 5 ##############################################
+
+x_9 = [9.989412e-1, 5.44332e-3]
+x9 = 9.989412e-1
+
+x_10 = [1.02036, -8.61686e-3]
+x10 = 1.02036
+
+
+y_9 = [9.93841e-1,-1.68076e-2]
+y9 = 9.93841e-1
+
+y_10 = [1.01063, 1.11857e-2]
+y10 = 1.01063
+
+x_axis4 = (x10 - x9) / 2
+#print(x_axis3)
+
+y_axis4 = (y10 - y9) / 2
+#print(y_axis3)
+
+eccentricity4 = np.sqrt(1 - ((y_axis4 ** 2) / (x_axis4 ** 2)))
+print('The eccentricity of the fifth inner orbit is,', eccentricity4)
+############################################### orbit 6 ##############################################
+
+x_11 = [9.88167e-1, 6.08039e-3]
+x11 = 9.88167e-1
+
+x_12 = [1.02121, -9.48822e-3]
+x12 = 1.02121
+
+
+y_11 = [9.93179e-1, -1.80092e-1]
+y11 = 9.93179e-1
+
+y_12 = [1.01125, 1.2234e-2]
+y12 = 1.01125
+
+x_axis5 = (x12 - x11) / 2
+#print(x_axis3)
+
+y_axis5 = (y12 - y11) / 2
+#print(y_axis3)
+
+eccentricity5 = np.sqrt(1 - ((y_axis5 ** 2) / (x_axis5 ** 2)))
+print('The eccentricity of the sixth inner orbit is,', eccentricity5)
